@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hilbert Spaces: Foundations & Structure</title>
+  <!-- Lesson built by MathVibe -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+      },
+      startup: { typeset: true }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Georgia', serif;
+      line-height: 1.7;
+      color: #1a1a1a;
+      background: #fff;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #0f172a;
+    }
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 3rem 0 1rem;
+      color: #1e293b;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+    }
+    p { margin: 1rem 0; }
+    .subtitle {
+      font-size: 1.1rem;
+      color: #64748b;
+      margin-bottom: 2rem;
+    }
+    .interactive-container {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    svg { display: block; margin: 0 auto; }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0;
+      align-items: center;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    label {
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    select, input[type="range"] {
+      font-size: 0.9rem;
+      padding: 0.3rem 0.5rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      background: #fff;
+    }
+    input[type="range"] {
+      width: 120px;
+      cursor: pointer;
+    }
+    button {
+      background: #0d9488;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    button:hover { background: #0f766e; }
+    button:disabled { background: #94a3b8; cursor: not-allowed; }
+    .readout {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-family: 'Courier New', monospace;
+    }
+    .readout-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .readout-row:last-child { border-bottom: none; }
+    .readout-label { color: #64748b; }
+    .readout-value { font-weight: 600; color: #0f172a; }
+    .accent { color: #0d9488; }
+    .accent2 { color: #7c3aed; }
+    .highlight-box {
+      background: #f0fdfa;
+      border-left: 4px solid #0d9488;
+      padding: 1rem 1.2rem;
+      margin: 1.5rem 0;
+    }
+    .question-box {
+      background: #fefce8;
+      border: 1px solid #fde047;
+      border-radius: 6px;
+      padding: 1rem;
+      margin: 1.5rem 0;
+    }
+    .question-box input {
+      width: 80px;
+      padding: 0.3rem 0.5rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      margin: 0 0.5rem;
+    }
+    .feedback { margin-left: 0.5rem; font-weight: 500; }
+    .feedback.correct { color: #059669; }
+    .feedback.incorrect { color: #b45309; }
+    .draggable { cursor: grab; }
+    .draggable:active { cursor: grabbing; }
+    .instruction {
+      font-style: italic;
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+    .formula-display {
+      text-align: center;
+      font-size: 1.1rem;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 6px;
+      margin: 1rem 0;
+    }
+    .identity-check {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 6px;
+      margin: 1rem 0;
+      font-family: 'Courier New', monospace;
+    }
+    .identity-side {
+      text-align: center;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+    }
+    .identity-equal { font-size: 1.5rem; font-weight: bold; }
+    .identity-match { background: #d1fae5; }
+    .identity-mismatch { background: #fee2e2; }
+  </style>
+</head>
+<body>
+
+<h1>Hilbert Spaces: Foundations & Structure</h1>
+<p class="subtitle">An interactive exploration of inner products, norms, metrics, and completeness</p>
+
+<!-- ============================================ -->
+<!-- SECTION 1: Inner Products to Norms to Metrics -->
+<!-- ============================================ -->
+<h2>1. From Inner Products to Norms to Metrics</h2>
+
+<p>A Hilbert space carries three layers of structure, each derived from the one before:</p>
+
+<div class="highlight-box">
+  <strong>The hierarchy:</strong> Inner Product $\langle \cdot, \cdot \rangle$ $\Rightarrow$ Norm $\|\cdot\|$ $\Rightarrow$ Metric $d(\cdot, \cdot)$
+</div>
+
+<p>The inner product is the most fundamental — it lets us compute angles and orthogonality. From it, we derive the norm via $\|x\| = \sqrt{\langle x, x \rangle}$, which measures "length." From the norm, we get the metric via $d(x, y) = \|x - y\|$, which measures "distance."</p>
+
+<p class="instruction">Drag the <span class="accent">teal</span> and <span class="accent2">purple</span> vector tips below. Watch how the inner product, norms, and distance all update — then switch inner products to see how the geometry changes.</p>
+
+<div class="interactive-container">
+  <div class="controls">
+    <div class="control-group">
+      <label for="ip-select">Inner Product:</label>
+      <select id="ip-select">
+        <option value="standard">Standard: $\langle u,v \rangle = u_1 v_1 + u_2 v_2$</option>
+        <option value="weighted">Weighted: $\langle u,v \rangle = 2u_1 v_1 + u_2 v_2$</option>
+        <option value="weighted2">Weighted: $\langle u,v \rangle = u_1 v_1 + 3u_2 v_2$</option>
+      </select>
+    </div>
+  </div>
+
+  <svg id="svg1" width="400" height="400" viewBox="-5 -5 10 10" style="touch-action:none; background:#fff; border:1px solid #e2e8f0; border-radius:6px;">
+    <!-- Grid -->
+    <defs>
+      <pattern id="grid1" width="1" height="1" patternUnits="userSpaceOnUse">
+        <path d="M 1 0 L 0 0 0 1" fill="none" stroke="#e2e8f0" stroke-width="0.02"/>
+      </pattern>
+    </defs>
+    <rect x="-5" y="-5" width="10" height="10" fill="url(#grid1)"/>
+    <line x1="-5" y1="0" x2="5" y2="0" stroke="#94a3b8" stroke-width="0.03"/>
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#94a3b8" stroke-width="0.03"/>
+
+    <!-- Unit circle for current inner product -->
+    <ellipse id="unit-circle1" cx="0" cy="0" rx="1" ry="1" fill="none" stroke="#cbd5e1" stroke-width="0.02" stroke-dasharray="0.1,0.05"/>
+
+    <!-- Vectors -->
+    <line id="vec-u-line" x1="0" y1="0" x2="3" y2="1" stroke="#0d9488" stroke-width="0.08"/>
+    <line id="vec-v-line" x1="0" y1="0" x2="1" y2="2" stroke="#7c3aed" stroke-width="0.08"/>
+
+    <!-- Difference vector (dashed) -->
+    <line id="vec-diff" x1="3" y1="1" x2="1" y2="2" stroke="#f59e0b" stroke-width="0.05" stroke-dasharray="0.15,0.08"/>
+
+    <!-- Draggable handles -->
+    <circle id="handle-u" cx="3" cy="1" r="0.25" fill="#0d9488" class="draggable"/>
+    <circle id="handle-v" cx="1" cy="2" r="0.25" fill="#7c3aed" class="draggable"/>
+
+    <!-- Labels -->
+    <text id="label-u" x="3.3" y="1" font-size="0.4" fill="#0d9488" font-weight="bold">u</text>
+    <text id="label-v" x="1.3" y="2" font-size="0.4" fill="#7c3aed" font-weight="bold">v</text>
+  </svg>
+
+  <div class="readout">
+    <div class="readout-row">
+      <span class="readout-label">Inner Product $\langle u, v \rangle$:</span>
+      <span class="readout-value" id="ip-value">5.00</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Norm $\|u\| = \sqrt{\langle u, u \rangle}$:</span>
+      <span class="readout-value accent" id="norm-u">3.16</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Norm $\|v\| = \sqrt{\langle v, v \rangle}$:</span>
+      <span class="readout-value accent2" id="norm-v">2.24</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Distance $d(u,v) = \|u - v\|$:</span>
+      <span class="readout-value" id="dist-uv" style="color:#f59e0b;">2.24</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Angle $\theta = \arccos\left(\frac{\langle u,v\rangle}{\|u\|\|v\|}\right)$:</span>
+      <span class="readout-value" id="angle-uv">45.0°</span>
+    </div>
+  </div>
+</div>
+
+<p>Notice how switching to a weighted inner product changes <em>all</em> the derived quantities — the "unit circle" becomes an ellipse, distances stretch in certain directions, and angles between the same vectors change. The inner product is truly the foundation.</p>
+
+<div class="question-box">
+  <strong>Check your understanding:</strong> If $u = (2, 0)$ and we use the weighted inner product $\langle x, y \rangle = 2x_1y_1 + x_2y_2$, what is $\|u\|$?
+  <br><br>
+  $\|u\| = $ <input type="text" id="q1-answer" size="6"> <span id="q1-feedback" class="feedback"></span>
+</div>
+
+<script>
+(function() {
+  const svg = document.getElementById('svg1');
+  const handleU = document.getElementById('handle-u');
+  const handleV = document.getElementById('handle-v');
+  const vecULine = document.getElementById('vec-u-line');
+  const vecVLine = document.getElementById('vec-v-line');
+  const vecDiff = document.getElementById('vec-diff');
+  const labelU = document.getElementById('label-u');
+  const labelV = document.getElementById('label-v');
+  const unitCircle = document.getElementById('unit-circle1');
+  const ipSelect = document.getElementById('ip-select');
+
+  const state = {
+    u: [3, 1],
+    v: [1, 2],
+    ipType: 'standard'
+  };
+
+  function getIPWeights() {
+    switch(state.ipType) {
+      case 'weighted': return [2, 1];
+      case 'weighted2': return [1, 3];
+      default: return [1, 1];
+    }
+  }
+
+  function innerProduct(a, b) {
+    const w = getIPWeights();
+    return w[0] * a[0] * b[0] + w[1] * a[1] * b[1];
+  }
+
+  function norm(a) {
+    return Math.sqrt(innerProduct(a, a));
+  }
+
+  function distance(a, b) {
+    const diff = [a[0] - b[0], a[1] - b[1]];
+    return norm(diff);
+  }
+
+  function render() {
+    const u = state.u;
+    const v = state.v;
+
+    // Update vectors
+    vecULine.setAttribute('x2', u[0]);
+    vecULine.setAttribute('y2', -u[1]);
+    vecVLine.setAttribute('x2', v[0]);
+    vecVLine.setAttribute('y2', -v[1]);
+
+    // Update difference line
+    vecDiff.setAttribute('x1', u[0]);
+    vecDiff.setAttribute('y1', -u[1]);
+    vecDiff.setAttribute('x2', v[0]);
+    vecDiff.setAttribute('y2', -v[1]);
+
+    // Update handles
+    handleU.setAttribute('cx', u[0]);
+    handleU.setAttribute('cy', -u[1]);
+    handleV.setAttribute('cx', v[0]);
+    handleV.setAttribute('cy', -v[1]);
+
+    // Update labels
+    labelU.setAttribute('x', u[0] + 0.3);
+    labelU.setAttribute('y', -u[1]);
+    labelV.setAttribute('x', v[0] + 0.3);
+    labelV.setAttribute('y', -v[1]);
+
+    // Update unit ellipse
+    const w = getIPWeights();
+    unitCircle.setAttribute('rx', 1 / Math.sqrt(w[0]));
+    unitCircle.setAttribute('ry', 1 / Math.sqrt(w[1]));
+
+    // Calculate values
+    const ip = innerProduct(u, v);
+    const normU = norm(u);
+    const normV = norm(v);
+    const dist = distance(u, v);
+    const cosAngle = ip / (normU * normV);
+    const angle = Math.acos(Math.max(-1, Math.min(1, cosAngle))) * 180 / Math.PI;
+
+    // Update readouts
+    document.getElementById('ip-value').textContent = ip.toFixed(2);
+    document.getElementById('norm-u').textContent = normU.toFixed(2);
+    document.getElementById('norm-v').textContent = normV.toFixed(2);
+    document.getElementById('dist-uv').textContent = dist.toFixed(2);
+    document.getElementById('angle-uv').textContent = angle.toFixed(1) + '°';
+  }
+
+  function toSvgCoords(evt) {
+    const pt = svg.createSVGPoint();
+    pt.x = evt.clientX;
+    pt.y = evt.clientY;
+    const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+    return [svgP.x, -svgP.y];
+  }
+
+  function clamp(val, min, max) {
+    return Math.max(min, Math.min(max, val));
+  }
+
+  function setupDrag(handle, vecKey) {
+    handle.addEventListener('pointerdown', e => {
+      handle.setPointerCapture(e.pointerId);
+    });
+    handle.addEventListener('pointermove', e => {
+      if (!handle.hasPointerCapture(e.pointerId)) return;
+      const [x, y] = toSvgCoords(e);
+      state[vecKey] = [clamp(x, -4.5, 4.5), clamp(y, -4.5, 4.5)];
+      render();
+    });
+  }
+
+  setupDrag(handleU, 'u');
+  setupDrag(handleV, 'v');
+
+  ipSelect.addEventListener('change', e => {
+    state.ipType = e.target.value;
+    render();
+    if (window.MathJax) MathJax.typeset();
+  });
+
+  // Question 1
+  document.getElementById('q1-answer').addEventListener('change', e => {
+    const val = parseFloat(e.target.value);
+    const fb = document.getElementById('q1-feedback');
+    // ||u||^2 = 2*4 + 1*0 = 8, so ||u|| = sqrt(8) ≈ 2.83
+    if (Math.abs(val - Math.sqrt(8)) < 0.1 || Math.abs(val - 2.83) < 0.1) {
+      fb.textContent = '✓ Correct! √(2·4 + 1·0) = √8 ≈ 2.83';
+      fb.className = 'feedback correct';
+    } else {
+      fb.textContent = 'Try computing ⟨u,u⟩ = 2·2² + 1·0², then take the square root.';
+      fb.className = 'feedback incorrect';
+    }
+  });
+
+  render();
+})();
+</script>
+
+<!-- ============================================ -->
+<!-- SECTION 2: Visualizing Higher Dimensions -->
+<!-- ============================================ -->
+<h2>2. Visualizing Beyond Three Dimensions</h2>
+
+<p>One of the biggest hurdles in understanding Hilbert spaces is that many important examples are infinite-dimensional. How can we build intuition for spaces we can't visualize directly?</p>
+
+<p>Here's a key insight: <strong>distance accumulates across dimensions</strong>. In $\mathbb{R}^n$, the Euclidean distance between two points is:</p>
+
+<div class="formula-display">
+  $d(x, y) = \sqrt{\sum_{i=1}^{n} (x_i - y_i)^2}$
+</div>
+
+<p>Each dimension contributes a term to this sum. More dimensions means more terms — and potentially much larger distances.</p>
+
+<p class="instruction">Drag the <span class="accent">target ring</span> below to set a desired distance. The system will show you which dimension is needed to make two standard basis vectors that far apart.</p>
+
+<div class="interactive-container">
+  <svg id="svg2" width="400" height="300" viewBox="0 0 400 300" style="touch-action:none; background:#fff; border:1px solid #e2e8f0; border-radius:6px;">
+    <!-- Two points -->
+    <circle cx="150" cy="150" r="8" fill="#0d9488"/>
+    <circle cx="250" cy="150" r="8" fill="#7c3aed"/>
+    <text x="150" y="175" text-anchor="middle" font-size="14" fill="#0d9488">e₁</text>
+    <text x="250" y="175" text-anchor="middle" font-size="14" fill="#7c3aed">e₂</text>
+
+    <!-- Distance line -->
+    <line id="dist-line2" x1="150" y1="150" x2="250" y2="150" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,3"/>
+
+    <!-- Target ring (draggable) -->
+    <circle id="target-ring" cx="200" cy="150" r="50" fill="none" stroke="#0d9488" stroke-width="3" class="draggable"/>
+    <circle id="ring-handle" cx="250" cy="150" r="10" fill="#0d9488" class="draggable" opacity="0.7"/>
+
+    <!-- Dimension display -->
+    <text x="200" y="40" text-anchor="middle" font-size="16" fill="#64748b">Dimension needed:</text>
+    <text id="dim-display" x="200" y="70" text-anchor="middle" font-size="36" font-weight="bold" fill="#0f172a">2</text>
+
+    <!-- Distance display -->
+    <text x="200" y="260" text-anchor="middle" font-size="14" fill="#64748b">Target distance: <tspan id="target-dist-display" fill="#0d9488" font-weight="bold">1.41</tspan></text>
+  </svg>
+
+  <div class="readout">
+    <div class="readout-row">
+      <span class="readout-label">Target distance $d$:</span>
+      <span class="readout-value accent" id="target-d">1.41</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Required dimension $n$:</span>
+      <span class="readout-value" id="req-dim">2</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Actual distance $\|e_1 - e_2\|$ in $\mathbb{R}^n$:</span>
+      <span class="readout-value" id="actual-dist">1.41</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Formula:</span>
+      <span class="readout-value" id="dist-formula" style="font-size:0.85rem;">$\sqrt{1^2 + 1^2} = \sqrt{2}$</span>
+    </div>
+  </div>
+
+  <!-- Bar chart showing contributions -->
+  <div style="margin-top:1rem;">
+    <p style="font-size:0.9rem; color:#64748b; margin-bottom:0.5rem;">Per-coordinate squared contributions $(e_1 - e_2)_i^2$:</p>
+    <svg id="bar-chart" width="400" height="60" viewBox="0 0 400 60">
+      <!-- Will be filled dynamically -->
+    </svg>
+  </div>
+</div>
+
+<p>Notice how the dimension counter climbs as you expand the ring. To double the distance, you need to quadruple the dimension! This is because $\|e_1 - e_2\| = \sqrt{n}$ when both are standard basis vectors in $\mathbb{R}^n$.</p>
+
+<div class="highlight-box">
+  <strong>Key insight:</strong> In high-dimensional spaces, "nearby" coordinate vectors can be astronomically far apart. The geometry of infinite-dimensional Hilbert spaces is nothing like our 3D intuition.
+</div>
+
+<div class="question-box">
+  <strong>Check your understanding:</strong> In $\mathbb{R}^{100}$, what is $\|e_1 - e_2\|$ where $e_1$ and $e_2$ are standard basis vectors?
+  <br><br>
+  $\|e_1 - e_2\| = $ <input type="text" id="q2-answer" size="6"> <span id="q2-feedback" class="feedback"></span>
+</div>
+
+<script>
+(function() {
+  const svg = document.getElementById('svg2');
+  const targetRing = document.getElementById('target-ring');
+  const ringHandle = document.getElementById('ring-handle');
+  const barChart = document.getElementById('bar-chart');
+
+  const state = {
+    targetDist: Math.sqrt(2),
+    minDist: 0.5,
+    maxDist: 5
+  };
+
+  function getDimensionForDistance(d) {
+    // ||e1 - e2|| = sqrt(2) in R^n when e1, e2 are distinct basis vectors
+    // But if we want distance d using n copies of contribution 1:
+    // We need d^2 = n * 1, so n = d^2 (rounded up)
+    return Math.max(2, Math.ceil(d * d));
+  }
+
+  function render() {
+    const d = state.targetDist;
+    const n = getDimensionForDistance(d);
+    const actualDist = Math.sqrt(2); // e1 - e2 always has 2 non-zero components
+
+    // Update ring
+    const radius = (d / state.maxDist) * 100 + 20;
+    targetRing.setAttribute('r', radius);
+    ringHandle.setAttribute('cx', 200 + radius);
+
+    // Update displays
+    document.getElementById('target-d').textContent = d.toFixed(2);
+    document.getElementById('target-dist-display').textContent = d.toFixed(2);
+    document.getElementById('dim-display').textContent = n;
+    document.getElementById('req-dim').textContent = n;
+    document.getElementById('actual-dist').textContent = Math.sqrt(2).toFixed(2);
+
+    // Update formula
+    const terms = n <= 6 ? Array(2).fill('1²').join(' + ') : '1² + 1² (2 terms)';
+    document.getElementById('dist-formula').innerHTML = `$\\sqrt{${terms}} = \\sqrt{2} \\approx 1.41$`;
+
+    // Update bar chart
+    barChart.innerHTML = '';
+    const barWidth = Math.min(30, 350 / n);
+    const maxBars = Math.min(n, 12);
+    for (let i = 0; i < maxBars; i++) {
+      const x = 25 + i * (barWidth + 2);
+      const val = (i < 2) ? 1 : 0; // Only first two components are non-zero
+      const height = val * 40;
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', x);
+      rect.setAttribute('y', 50 - height);
+      rect.setAttribute('width', barWidth - 2);
+      rect.setAttribute('height', Math.max(2, height));
+      rect.setAttribute('fill', val > 0 ? '#0d9488' : '#e2e8f0');
+      rect.setAttribute('rx', 2);
+      barChart.appendChild(rect);
+
+      const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      label.setAttribute('x', x + barWidth/2 - 1);
+      label.setAttribute('y', 58);
+      label.setAttribute('text-anchor', 'middle');
+      label.setAttribute('font-size', '9');
+      label.setAttribute('fill', '#94a3b8');
+      label.textContent = 'x' + (i+1);
+      barChart.appendChild(label);
+    }
+    if (n > 12) {
+      const dots = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      dots.setAttribute('x', 380);
+      dots.setAttribute('y', 35);
+      dots.setAttribute('font-size', '14');
+      dots.setAttribute('fill', '#94a3b8');
+      dots.textContent = '...';
+      barChart.appendChild(dots);
+    }
+
+    if (window.MathJax) MathJax.typeset();
+  }
+
+  function toSvgX(evt) {
+    const pt = svg.createSVGPoint();
+    pt.x = evt.clientX;
+    pt.y = evt.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse()).x;
+  }
+
+  ringHandle.addEventListener('pointerdown', e => {
+    ringHandle.setPointerCapture(e.pointerId);
+  });
+
+  ringHandle.addEventListener('pointermove', e => {
+    if (!ringHandle.hasPointerCapture(e.pointerId)) return;
+    const x = toSvgX(e);
+    const radius = Math.max(20, Math.min(120, x - 200));
+    state.targetDist = ((radius - 20) / 100) * state.maxDist + state.minDist;
+    state.targetDist = Math.max(state.minDist, Math.min(state.maxDist, state.targetDist));
+    render();
+  });
+
+  // Question 2
+  document.getElementById('q2-answer').addEventListener('change', e => {
+    const val = parseFloat(e.target.value);
+    const fb = document.getElementById('q2-feedback');
+    // e1 and e2 differ in exactly 2 coordinates, so ||e1-e2|| = sqrt(2) regardless of dimension
+    if (Math.abs(val - Math.sqrt(2)) < 0.1 || Math.abs(val - 1.41) < 0.05) {
+      fb.textContent = '✓ Correct! The basis vectors e₁ and e₂ differ only in 2 coordinates, so ||e₁-e₂|| = √2 ≈ 1.41 in ANY dimension.';
+      fb.className = 'feedback correct';
+    } else {
+      fb.textContent = 'Hint: e₁ and e₂ are orthogonal unit vectors. How many coordinates differ between them?';
+      fb.className = 'feedback incorrect';
+    }
+  });
+
+  render();
+})();
+</script>
+
+<!-- ============================================ -->
+<!-- SECTION 3: Completeness and Cauchy Sequences -->
+<!-- ============================================ -->
+<h2>3. Completeness: Why Cauchy Sequences Matter</h2>
+
+<p>A <strong>Cauchy sequence</strong> is one where the terms get arbitrarily close to each other as $n \to \infty$. Formally: for every $\varepsilon &gt; 0$, there exists $N$ such that $\|x_n - x_m\| &lt; \varepsilon$ whenever $n, m &gt; N$.</p>
+
+<p>A space is <strong>complete</strong> if every Cauchy sequence converges to a limit <em>within the space</em>. This is THE defining property of Hilbert spaces (beyond having an inner product).</p>
+
+<div class="highlight-box">
+  <strong>The problem with incompleteness:</strong> In the rationals $\mathbb{Q}$, the sequence $1, 1.4, 1.41, 1.414, 1.4142, \ldots$ is Cauchy (terms get closer together), but its limit $\sqrt{2}$ doesn't exist in $\mathbb{Q}$. The sequence "escapes" the space!
+</div>
+
+<p class="instruction">Below, place your <span class="accent">landing pad</span> where you think the Cauchy sequence will converge. Then press "Run Sequence" to watch it unfold. Toggle between ℝ (complete) and ℚ (incomplete) to see the difference.</p>
+
+<div class="interactive-container">
+  <div class="controls">
+    <div class="control-group">
+      <label for="space-select">Space:</label>
+      <select id="space-select">
+        <option value="complete">ℝ (complete)</option>
+        <option value="incomplete">ℚ (incomplete — hole at √2)</option>
+      </select>
+    </div>
+    <button id="run-seq-btn">Run Sequence</button>
+    <button id="reset-seq-btn">Reset</button>
+  </div>
+
+  <svg id="svg3" width="600" height="200" viewBox="0 0 600 200" style="touch-action:none; background:#fff; border:1px solid #e2e8f0; border-radius:6px;">
+    <!-- Number line -->
+    <line x1="50" y1="100" x2="550" y2="100" stroke="#94a3b8" stroke-width="2"/>
+
+    <!-- Tick marks -->
+    <g id="ticks3">
+      <line x1="100" y1="95" x2="100" y2="105" stroke="#64748b" stroke-width="1"/>
+      <text x="100" y="120" text-anchor="middle" font-size="12" fill="#64748b">1</text>
+
+      <line x1="200" y1="95" x2="200" y2="105" stroke="#64748b" stroke-width="1"/>
+      <text x="200" y="120" text-anchor="middle" font-size="12" fill="#64748b">1.5</text>
+
+      <line x1="300" y1="95" x2="300" y2="105" stroke="#64748b" stroke-width="1"/>
+      <text x="300" y="120" text-anchor="middle" font-size="12" fill="#64748b">2</text>
+
+      <line x1="184" y1="90" x2="184" y2="110" stroke="#ef4444" stroke-width="2" id="sqrt2-mark"/>
+      <text x="184" y="135" text-anchor="middle" font-size="11" fill="#ef4444" id="sqrt2-label">√2 ≈ 1.414</text>
+    </g>
+
+    <!-- Hole indicator (for incomplete space) -->
+    <circle id="hole-indicator" cx="184" cy="100" r="8" fill="#fff" stroke="#ef4444" stroke-width="2" style="display:none;"/>
+
+    <!-- Landing pad (draggable) -->
+    <g id="landing-pad" class="draggable">
+      <rect x="170" y="55" width="28" height="10" fill="#0d9488" rx="2"/>
+      <polygon points="184,65 178,75 190,75" fill="#0d9488"/>
+      <text x="184" y="50" text-anchor="middle" font-size="10" fill="#0d9488">your prediction</text>
+    </g>
+
+    <!-- Sequence points container -->
+    <g id="seq-points"></g>
+
+    <!-- Current term indicator -->
+    <text id="current-term" x="300" y="170" text-anchor="middle" font-size="14" fill="#0f172a" style="display:none;"></text>
+
+    <!-- Epsilon tube -->
+    <rect id="epsilon-tube" x="174" y="85" width="20" height="30" fill="#0d9488" opacity="0.15" rx="3" style="display:none;"/>
+  </svg>
+
+  <div class="readout">
+    <div class="readout-row">
+      <span class="readout-label">Your predicted limit:</span>
+      <span class="readout-value accent" id="pred-limit">1.41</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Actual limit of sequence:</span>
+      <span class="readout-value" id="actual-limit">√2 ≈ 1.4142...</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Distance to prediction:</span>
+      <span class="readout-value" id="dist-to-pred">0.00</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Status:</span>
+      <span class="readout-value" id="seq-status">Place your landing pad, then run the sequence</span>
+    </div>
+  </div>
+</div>
+
+<p>In the incomplete space ℚ, the sequence desperately wants to converge to $\sqrt{2}$, but that point simply doesn't exist! The terms pile up around an empty hole. This is catastrophic for analysis — we can't take limits, can't define derivatives or integrals reliably.</p>
+
+<div class="question-box">
+  <strong>Check your understanding:</strong> Consider the sequence $a_n = (1 + 1/n)^n$ in ℝ. Is this sequence Cauchy? Does it converge?
+  <br><br>
+  <select id="q3-answer">
+    <option value="">Select an answer...</option>
+    <option value="a">Cauchy and converges (to e ≈ 2.718)</option>
+    <option value="b">Cauchy but does not converge</option>
+    <option value="c">Not Cauchy</option>
+  </select>
+  <span id="q3-feedback" class="feedback"></span>
+</div>
+
+<script>
+(function() {
+  const svg = document.getElementById('svg3');
+  const landingPad = document.getElementById('landing-pad');
+  const seqPoints = document.getElementById('seq-points');
+  const holeIndicator = document.getElementById('hole-indicator');
+  const epsilonTube = document.getElementById('epsilon-tube');
+  const spaceSelect = document.getElementById('space-select');
+  const runBtn = document.getElementById('run-seq-btn');
+  const resetBtn = document.getElementById('reset-seq-btn');
+
+  const state = {
+    padX: 184, // Position of landing pad (maps to value on number line)
+    isComplete: true,
+    isRunning: false,
+    currentTerm: 0,
+    sequence: []
+  };
+
+  // Generate sequence converging to sqrt(2)
+  function generateSequence() {
+    // Babylonian method for sqrt(2)
+    const seq = [1];
+    let x = 1;
+    for (let i = 0; i < 15; i++) {
+      x = (x + 2/x) / 2;
+      seq.push(x);
+    }
+    return seq;
+  }
+
+  function valueToX(val) {
+    // Map value [0.5, 2.5] to x [50, 550]
+    return 50 + (val - 0.5) * 250;
+  }
+
+  function xToValue(x) {
+    return 0.5 + (x - 50) / 250;
+  }
+
+  function render() {
+    // Update hole indicator
+    holeIndicator.style.display = state.isComplete ? 'none' : 'block';
+
+    // Update prediction display
+    const predVal = xToValue(state.padX);
+    document.getElementById('pred-limit').textContent = predVal.toFixed(3);
+
+    // Update distance to prediction
+    const dist = Math.abs(predVal - Math.sqrt(2));
+    document.getElementById('dist-to-pred').textContent = dist.toFixed(4);
+
+    // Update landing pad position
+    landingPad.querySelector('rect').setAttribute('x', state.padX - 14);
+    landingPad.querySelector('polygon').setAttribute('points',
+      `${state.padX},65 ${state.padX-6},75 ${state.padX+6},75`);
+    landingPad.querySelector('text').setAttribute('x', state.padX);
+  }
+
+  function runSequence() {
+    if (state.isRunning) return;
+    state.isRunning = true;
+    state.sequence = generateSequence();
+    state.currentTerm = 0;
+    seqPoints.innerHTML = '';
+
+    runBtn.disabled = true;
+    document.getElementById('seq-status').textContent = 'Running...';
+
+    const interval = setInterval(() => {
+      if (state.currentTerm >= state.sequence.length) {
+        clearInterval(interval);
+        state.isRunning = false;
+        runBtn.disabled = false;
+
+        if (state.isComplete) {
+          document.getElementById('seq-status').textContent =
+            '✓ Converged to √2! The limit exists in ℝ.';
+          document.getElementById('seq-status').style.color = '#059669';
+        } else {
+          document.getElementById('seq-status').textContent =
+            '✗ Sequence bunches at √2, but √2 ∉ ℚ! No limit exists.';
+          document.getElementById('seq-status').style.color = '#dc2626';
+        }
+        return;
+      }
+
+      const val = state.sequence[state.currentTerm];
+      const x = valueToX(val);
+
+      // Add point
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', x);
+      circle.setAttribute('cy', 100);
+      circle.setAttribute('r', 6);
+      circle.setAttribute('fill', '#7c3aed');
+      circle.setAttribute('opacity', 0.3 + 0.7 * (state.currentTerm / state.sequence.length));
+      seqPoints.appendChild(circle);
+
+      // Update current term display
+      const termDisplay = document.getElementById('current-term');
+      termDisplay.style.display = 'block';
+      termDisplay.textContent = `a_${state.currentTerm + 1} = ${val.toFixed(6)}`;
+
+      // Update epsilon tube
+      if (state.currentTerm > 3) {
+        epsilonTube.style.display = 'block';
+        const spread = Math.abs(val - state.sequence[state.currentTerm - 1]) * 250;
+        const tubeWidth = Math.max(4, spread * 10);
+        epsilonTube.setAttribute('x', valueToX(Math.sqrt(2)) - tubeWidth/2);
+        epsilonTube.setAttribute('width', tubeWidth);
+      }
+
+      state.currentTerm++;
+    }, 400);
+  }
+
+  function reset() {
+    state.isRunning = false;
+    state.currentTerm = 0;
+    seqPoints.innerHTML = '';
+    document.getElementById('current-term').style.display = 'none';
+    epsilonTube.style.display = 'none';
+    document.getElementById('seq-status').textContent = 'Place your landing pad, then run the sequence';
+    document.getElementById('seq-status').style.color = '#0f172a';
+    runBtn.disabled = false;
+  }
+
+  // Drag handling for landing pad
+  landingPad.addEventListener('pointerdown', e => {
+    if (state.isRunning) return;
+    landingPad.setPointerCapture(e.pointerId);
+  });
+
+  landingPad.addEventListener('pointermove', e => {
+    if (!landingPad.hasPointerCapture(e.pointerId)) return;
+    const pt = svg.createSVGPoint();
+    pt.x = e.clientX;
+    pt.y = e.clientY;
+    const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+    state.padX = Math.max(60, Math.min(540, svgP.x));
+    render();
+  });
+
+  spaceSelect.addEventListener('change', e => {
+    state.isComplete = e.target.value === 'complete';
+    reset();
+    render();
+  });
+
+  runBtn.addEventListener('click', runSequence);
+  resetBtn.addEventListener('click', reset);
+
+  // Question 3
+  document.getElementById('q3-answer').addEventListener('change', e => {
+    const fb = document.getElementById('q3-feedback');
+    if (e.target.value === 'a') {
+      fb.textContent = '✓ Correct! In ℝ (complete), every Cauchy sequence converges.';
+      fb.className = 'feedback correct';
+    } else if (e.target.value === 'b') {
+      fb.textContent = 'In a complete space like ℝ, Cauchy sequences ALWAYS converge!';
+      fb.className = 'feedback incorrect';
+    } else if (e.target.value === 'c') {
+      fb.textContent = 'This sequence does satisfy the Cauchy criterion — check the definition.';
+      fb.className = 'feedback incorrect';
+    }
+  });
+
+  render();
+})();
+</script>
+
+<!-- ============================================ -->
+<!-- SECTION 4: Hilbert vs Banach -->
+<!-- ============================================ -->
+<h2>4. Hilbert vs Banach: The Parallelogram Law</h2>
+
+<p>Both Hilbert spaces and Banach spaces are complete normed vector spaces. What makes Hilbert spaces special? They have an <strong>inner product</strong> underlying their norm.</p>
+
+<p>The <strong>parallelogram law</strong> is the geometric test: a norm comes from an inner product if and only if:</p>
+
+<div class="formula-display">
+  $\|u + v\|^2 + \|u - v\|^2 = 2\|u\|^2 + 2\|v\|^2$
+</div>
+
+<p>This says: in a parallelogram, the sum of squared diagonals equals the sum of squared sides (times 2).</p>
+
+<p class="instruction">Click to place vectors <span class="accent">u</span> and <span class="accent2">v</span> on the grid below. Try different norms (L¹, L², L∞) and see which ones satisfy the parallelogram law!</p>
+
+<div class="interactive-container">
+  <div class="controls">
+    <div class="control-group">
+      <label for="norm-select">Norm:</label>
+      <select id="norm-select">
+        <option value="l2">L² (Euclidean): $\|(x,y)\| = \sqrt{x^2 + y^2}$</option>
+        <option value="l1">L¹ (Manhattan): $\|(x,y)\| = |x| + |y|$</option>
+        <option value="linf">L∞ (Maximum): $\|(x,y)\| = \max(|x|, |y|)$</option>
+      </select>
+    </div>
+    <button id="clear-vecs-btn">Clear Vectors</button>
+  </div>
+
+  <svg id="svg4" width="400" height="400" viewBox="-5 -5 10 10" style="touch-action:none; background:#fff; border:1px solid #e2e8f0; border-radius:6px;">
+    <!-- Grid -->
+    <defs>
+      <pattern id="grid4" width="1" height="1" patternUnits="userSpaceOnUse">
+        <path d="M 1 0 L 0 0 0 1" fill="none" stroke="#e2e8f0" stroke-width="0.02"/>
+      </pattern>
+    </defs>
+    <rect x="-5" y="-5" width="10" height="10" fill="url(#grid4)"/>
+    <line x1="-5" y1="0" x2="5" y2="0" stroke="#94a3b8" stroke-width="0.03"/>
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#94a3b8" stroke-width="0.03"/>
+
+    <!-- Unit ball outline -->
+    <path id="unit-ball" d="" fill="none" stroke="#cbd5e1" stroke-width="0.03" stroke-dasharray="0.1,0.05"/>
+
+    <!-- Parallelogram -->
+    <polygon id="parallelogram" points="" fill="#e0f2fe" fill-opacity="0.3" stroke="#0ea5e9" stroke-width="0.04" style="display:none;"/>
+
+    <!-- Vectors -->
+    <line id="vec-u4" x1="0" y1="0" x2="0" y2="0" stroke="#0d9488" stroke-width="0.08"/>
+    <line id="vec-v4" x1="0" y1="0" x2="0" y2="0" stroke="#7c3aed" stroke-width="0.08"/>
+
+    <!-- Diagonals -->
+    <line id="diag-sum" x1="0" y1="0" x2="0" y2="0" stroke="#f59e0b" stroke-width="0.06" stroke-dasharray="0.15,0.08" style="display:none;"/>
+    <line id="diag-diff" x1="0" y1="0" x2="0" y2="0" stroke="#ef4444" stroke-width="0.06" stroke-dasharray="0.15,0.08" style="display:none;"/>
+
+    <!-- Draggable handles -->
+    <circle id="handle-u4" cx="0" cy="0" r="0.25" fill="#0d9488" class="draggable" style="display:none;"/>
+    <circle id="handle-v4" cx="0" cy="0" r="0.25" fill="#7c3aed" class="draggable" style="display:none;"/>
+
+    <!-- Labels -->
+    <text id="label-u4" x="0" y="0" font-size="0.35" fill="#0d9488" font-weight="bold" style="display:none;">u</text>
+    <text id="label-v4" x="0" y="0" font-size="0.35" fill="#7c3aed" font-weight="bold" style="display:none;">v</text>
+    <text id="label-sum" x="0" y="0" font-size="0.3" fill="#f59e0b" style="display:none;">u+v</text>
+    <text id="label-diff" x="0" y="0" font-size="0.3" fill="#ef4444" style="display:none;">u-v</text>
+
+    <!-- Click instruction -->
+    <text id="click-instr" x="0" y="0" font-size="0.4" fill="#94a3b8" text-anchor="middle">Click to place vector u</text>
+  </svg>
+
+  <div class="identity-check" id="identity-display" style="display:none;">
+    <div class="identity-side" id="lhs-display">
+      <div style="font-size:0.8rem; color:#64748b;">LHS: $\|u+v\|^2 + \|u-v\|^2$</div>
+      <div style="font-size:1.3rem; font-weight:bold;" id="lhs-value">0.00</div>
+    </div>
+    <div class="identity-equal" id="eq-symbol">=?</div>
+    <div class="identity-side" id="rhs-display">
+      <div style="font-size:0.8rem; color:#64748b;">RHS: $2\|u\|^2 + 2\|v\|^2$</div>
+      <div style="font-size:1.3rem; font-weight:bold;" id="rhs-value">0.00</div>
+    </div>
+  </div>
+
+  <div class="readout" id="vec-readout" style="display:none;">
+    <div class="readout-row">
+      <span class="readout-label">$\|u\|$:</span>
+      <span class="readout-value accent" id="norm-u4">0</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">$\|v\|$:</span>
+      <span class="readout-value accent2" id="norm-v4">0</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">$\|u + v\|$:</span>
+      <span class="readout-value" id="norm-sum" style="color:#f59e0b;">0</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">$\|u - v\|$:</span>
+      <span class="readout-value" id="norm-diff" style="color:#ef4444;">0</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Verdict:</span>
+      <span class="readout-value" id="verdict">—</span>
+    </div>
+  </div>
+</div>
+
+<p>The L² norm (Euclidean) <em>always</em> satisfies the parallelogram law — it comes from the standard inner product. But L¹ and L∞ fail! This is why $\ell^1$ and $\ell^\infty$ are Banach spaces but not Hilbert spaces.</p>
+
+<div class="question-box">
+  <strong>Check your understanding:</strong> The parallelogram law guarantees that we can recover an inner product from a norm via the <em>polarization identity</em>. In a real Hilbert space, what is the formula?
+  <br><br>
+  <select id="q4-answer">
+    <option value="">Select...</option>
+    <option value="a">$\langle u, v \rangle = \frac{1}{4}(\|u+v\|^2 - \|u-v\|^2)$</option>
+    <option value="b">$\langle u, v \rangle = \|u\| \cdot \|v\|$</option>
+    <option value="c">$\langle u, v \rangle = \frac{1}{2}(\|u\|^2 + \|v\|^2)$</option>
+  </select>
+  <span id="q4-feedback" class="feedback"></span>
+</div>
+
+<script>
+(function() {
+  const svg = document.getElementById('svg4');
+  const normSelect = document.getElementById('norm-select');
+  const clearBtn = document.getElementById('clear-vecs-btn');
+
+  const state = {
+    u: null,
+    v: null,
+    normType: 'l2',
+    placing: 'u' // 'u', 'v', or 'done'
+  };
+
+  function norm(vec) {
+    if (!vec) return 0;
+    const [x, y] = vec;
+    switch(state.normType) {
+      case 'l1': return Math.abs(x) + Math.abs(y);
+      case 'linf': return Math.max(Math.abs(x), Math.abs(y));
+      default: return Math.sqrt(x*x + y*y);
+    }
+  }
+
+  function vecAdd(a, b) { return [a[0] + b[0], a[1] + b[1]]; }
+  function vecSub(a, b) { return [a[0] - b[0], a[1] - b[1]]; }
+
+  function getUnitBallPath() {
+    const pts = [];
+    const n = 100;
+    for (let i = 0; i <= n; i++) {
+      const t = (i / n) * 2 * Math.PI;
+      let x, y;
+      switch(state.normType) {
+        case 'l1':
+          // Diamond: |x| + |y| = 1
+          const phase = t / (Math.PI / 2);
+          const quad = Math.floor(phase) % 4;
+          const frac = phase - Math.floor(phase);
+          if (quad === 0) { x = 1 - frac; y = frac; }
+          else if (quad === 1) { x = -frac; y = 1 - frac; }
+          else if (quad === 2) { x = -1 + frac; y = -frac; }
+          else { x = frac; y = -1 + frac; }
+          break;
+        case 'linf':
+          // Square: max(|x|,|y|) = 1
+          x = Math.cos(t);
+          y = Math.sin(t);
+          const scale = 1 / Math.max(Math.abs(x), Math.abs(y));
+          x *= scale;
+          y *= scale;
+          break;
+        default:
+          x = Math.cos(t);
+          y = Math.sin(t);
+      }
+      pts.push(`${i === 0 ? 'M' : 'L'} ${x} ${-y}`);
+    }
+    return pts.join(' ') + ' Z';
+  }
+
+  function render() {
+    // Update unit ball
+    document.getElementById('unit-ball').setAttribute('d', getUnitBallPath());
+
+    // Update instruction
+    const instr = document.getElementById('click-instr');
+    if (state.placing === 'u') {
+      instr.textContent = 'Click to place vector u';
+      instr.style.display = 'block';
+    } else if (state.placing === 'v') {
+      instr.textContent = 'Click to place vector v';
+      instr.style.display = 'block';
+    } else {
+      instr.style.display = 'none';
+    }
+
+    // Update vectors
+    const vecU = document.getElementById('vec-u4');
+    const vecV = document.getElementById('vec-v4');
+    const handleU = document.getElementById('handle-u4');
+    const handleV = document.getElementById('handle-v4');
+    const labelU = document.getElementById('label-u4');
+    const labelV = document.getElementById('label-v4');
+
+    if (state.u) {
+      vecU.setAttribute('x2', state.u[0]);
+      vecU.setAttribute('y2', -state.u[1]);
+      handleU.setAttribute('cx', state.u[0]);
+      handleU.setAttribute('cy', -state.u[1]);
+      handleU.style.display = 'block';
+      labelU.setAttribute('x', state.u[0] + 0.2);
+      labelU.setAttribute('y', -state.u[1] - 0.2);
+      labelU.style.display = 'block';
+    } else {
+      vecU.setAttribute('x2', 0);
+      vecU.setAttribute('y2', 0);
+      handleU.style.display = 'none';
+      labelU.style.display = 'none';
+    }
+
+    if (state.v) {
+      vecV.setAttribute('x2', state.v[0]);
+      vecV.setAttribute('y2', -state.v[1]);
+      handleV.setAttribute('cx', state.v[0]);
+      handleV.setAttribute('cy', -state.v[1]);
+      handleV.style.display = 'block';
+      labelV.setAttribute('x', state.v[0] + 0.2);
+      labelV.setAttribute('y', -state.v[1] - 0.2);
+      labelV.style.display = 'block';
+    } else {
+      vecV.setAttribute('x2', 0);
+      vecV.setAttribute('y2', 0);
+      handleV.style.display = 'none';
+      labelV.style.display = 'none';
+    }
+
+    // Update parallelogram and calculations if both vectors exist
+    const para = document.getElementById('parallelogram');
+    const diagSum = document.getElementById('diag-sum');
+    const diagDiff = document.getElementById('diag-diff');
+    const labelSum = document.getElementById('label-sum');
+    const labelDiff = document.getElementById('label-diff');
+    const identityDisplay = document.getElementById('identity-display');
+    const vecReadout = document.getElementById('vec-readout');
+
+    if (state.u && state.v) {
+      const sum = vecAdd(state.u, state.v);
+      const diff = vecSub(state.u, state.v);
+
+      // Draw parallelogram: 0, u, u+v, v
+      para.setAttribute('points',
+        `0,0 ${state.u[0]},${-state.u[1]} ${sum[0]},${-sum[1]} ${state.v[0]},${-state.v[1]}`);
+      para.style.display = 'block';
+
+      // Draw diagonals
+      diagSum.setAttribute('x2', sum[0]);
+      diagSum.setAttribute('y2', -sum[1]);
+      diagSum.style.display = 'block';
+
+      diagDiff.setAttribute('x1', state.u[0]);
+      diagDiff.setAttribute('y1', -state.u[1]);
+      diagDiff.setAttribute('x2', state.v[0]);
+      diagDiff.setAttribute('y2', -state.v[1]);
+      diagDiff.style.display = 'block';
+
+      labelSum.setAttribute('x', sum[0]/2 + 0.2);
+      labelSum.setAttribute('y', -sum[1]/2);
+      labelSum.style.display = 'block';
+
+      labelDiff.setAttribute('x', (state.u[0] + state.v[0])/2 + 0.2);
+      labelDiff.setAttribute('y', -(state.u[1] + state.v[1])/2 + 0.3);
+      labelDiff.style.display = 'block';
+
+      // Calculate norms
+      const normU = norm(state.u);
+      const normV = norm(state.v);
+      const normSum = norm(sum);
+      const normDiff = norm(diff);
+
+      const lhs = normSum * normSum + normDiff * normDiff;
+      const rhs = 2 * normU * normU + 2 * normV * normV;
+      const isEqual = Math.abs(lhs - rhs) < 0.01;
+
+      // Update displays
+      document.getElementById('norm-u4').textContent = normU.toFixed(2);
+      document.getElementById('norm-v4').textContent = normV.toFixed(2);
+      document.getElementById('norm-sum').textContent = normSum.toFixed(2);
+      document.getElementById('norm-diff').textContent = normDiff.toFixed(2);
+
+      document.getElementById('lhs-value').textContent = lhs.toFixed(2);
+      document.getElementById('rhs-value').textContent = rhs.toFixed(2);
+
+      const lhsBox = document.getElementById('lhs-display');
+      const rhsBox = document.getElementById('rhs-display');
+      const eqSymbol = document.getElementById('eq-symbol');
+      const verdict = document.getElementById('verdict');
+
+      if (isEqual) {
+        lhsBox.className = 'identity-side identity-match';
+        rhsBox.className = 'identity-side identity-match';
+        eqSymbol.textContent = '=';
+        eqSymbol.style.color = '#059669';
+        verdict.textContent = '✓ Parallelogram law holds! This norm comes from an inner product.';
+        verdict.style.color = '#059669';
+      } else {
+        lhsBox.className = 'identity-side identity-mismatch';
+        rhsBox.className = 'identity-side identity-mismatch';
+        eqSymbol.textContent = '≠';
+        eqSymbol.style.color = '#dc2626';
+        verdict.textContent = '✗ Parallelogram law FAILS. This is a Banach space but NOT a Hilbert space.';
+        verdict.style.color = '#dc2626';
+      }
+
+      identityDisplay.style.display = 'flex';
+      vecReadout.style.display = 'block';
+    } else {
+      para.style.display = 'none';
+      diagSum.style.display = 'none';
+      diagDiff.style.display = 'none';
+      labelSum.style.display = 'none';
+      labelDiff.style.display = 'none';
+      identityDisplay.style.display = 'none';
+      vecReadout.style.display = 'none';
+    }
+
+    if (window.MathJax) MathJax.typeset();
+  }
+
+  function toSvgCoords(evt) {
+    const pt = svg.createSVGPoint();
+    pt.x = evt.clientX;
+    pt.y = evt.clientY;
+    const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+    return [svgP.x, -svgP.y];
+  }
+
+  function clamp(val, min, max) {
+    return Math.max(min, Math.min(max, val));
+  }
+
+  svg.addEventListener('click', e => {
+    if (state.placing === 'done') return;
+    const [x, y] = toSvgCoords(e);
+    const vec = [clamp(x, -4, 4), clamp(y, -4, 4)];
+
+    if (state.placing === 'u') {
+      state.u = vec;
+      state.placing = 'v';
+    } else if (state.placing === 'v') {
+      state.v = vec;
+      state.placing = 'done';
+    }
+    render();
+  });
+
+  // Drag handlers
+  function setupDrag(handleId, vecKey) {
+    const handle = document.getElementById(handleId);
+    handle.addEventListener('pointerdown', e => {
+      e.stopPropagation();
+      handle.setPointerCapture(e.pointerId);
+    });
+    handle.addEventListener('pointermove', e => {
+      if (!handle.hasPointerCapture(e.pointerId)) return;
+      const [x, y] = toSvgCoords(e);
+      state[vecKey] = [clamp(x, -4, 4), clamp(y, -4, 4)];
+      render();
+    });
+  }
+
+  setupDrag('handle-u4', 'u');
+  setupDrag('handle-v4', 'v');
+
+  normSelect.addEventListener('change', e => {
+    state.normType = e.target.value;
+    render();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    state.u = null;
+    state.v = null;
+    state.placing = 'u';
+    render();
+  });
+
+  // Question 4
+  document.getElementById('q4-answer').addEventListener('change', e => {
+    const fb = document.getElementById('q4-feedback');
+    if (e.target.value === 'a') {
+      fb.textContent = '✓ Correct! This is the polarization identity for real spaces.';
+      fb.className = 'feedback correct';
+    } else if (e.target.value === 'b') {
+      fb.textContent = 'That would make ⟨u,v⟩ always non-negative — but inner products can be negative!';
+      fb.className = 'feedback incorrect';
+    } else if (e.target.value === 'c') {
+      fb.textContent = 'This doesn\'t involve both u and v together — check the parallelogram law again.';
+      fb.className = 'feedback incorrect';
+    }
+  });
+
+  render();
+})();
+</script>
+
+<!-- ============================================ -->
+<!-- SECTION 5: L² as the Canonical Example -->
+<!-- ============================================ -->
+<h2>5. L² as the Canonical Infinite-Dimensional Example</h2>
+
+<p>The space $L^2[0, 2\pi]$ of square-integrable functions is the most important infinite-dimensional Hilbert space. Its inner product is:</p>
+
+<div class="formula-display">
+  $\langle f, g \rangle = \int_0^{2\pi} f(x) g(x) \, dx$
+</div>
+
+<p>This lets us measure "angles" and "distances" between functions! Two functions are <strong>orthogonal</strong> if their inner product is zero — their "positive overlap" exactly cancels their "negative overlap."</p>
+
+<p class="instruction">Scrub through the integration below to watch the inner product $\langle f, g \rangle$ accumulate from left to right. See where positive and negative contributions come from, and discover why $\sin(x)$ and $\cos(x)$ are orthogonal!</p>
+
+<div class="interactive-container">
+  <div class="controls">
+    <div class="control-group">
+      <label for="func-f">f(x):</label>
+      <select id="func-f">
+        <option value="sin">sin(x)</option>
+        <option value="cos">cos(x)</option>
+        <option value="sin2">sin(2x)</option>
+        <option value="const">1 (constant)</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label for="func-g">g(x):</label>
+      <select id="func-g">
+        <option value="cos">cos(x)</option>
+        <option value="sin">sin(x)</option>
+        <option value="sin2">sin(2x)</option>
+        <option value="const">1 (constant)</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>Integration limit t:</label>
+      <input type="range" id="int-slider" min="0" max="100" value="100" style="width:200px;">
+      <span id="t-value">2π</span>
+    </div>
+  </div>
+
+  <!-- Function plots -->
+  <svg id="svg5-funcs" width="600" height="150" viewBox="0 0 600 150" style="background:#fff; border:1px solid #e2e8f0; border-radius:6px 6px 0 0;">
+    <text x="10" y="20" font-size="12" fill="#64748b">f(x) and g(x)</text>
+    <line x1="50" y1="75" x2="550" y2="75" stroke="#e2e8f0" stroke-width="1"/>
+    <path id="path-f" d="" fill="none" stroke="#0d9488" stroke-width="2"/>
+    <path id="path-g" d="" fill="none" stroke="#7c3aed" stroke-width="2"/>
+    <line id="scan-line-1" x1="550" y1="25" x2="550" y2="125" stroke="#f59e0b" stroke-width="2"/>
+    <text x="560" y="50" font-size="11" fill="#0d9488">f</text>
+    <text x="560" y="70" font-size="11" fill="#7c3aed">g</text>
+  </svg>
+
+  <!-- Product plot -->
+  <svg id="svg5-prod" width="600" height="120" viewBox="0 0 600 120" style="background:#fff; border:1px solid #e2e8f0; border-left:1px solid #e2e8f0; border-right:1px solid #e2e8f0;">
+    <text x="10" y="20" font-size="12" fill="#64748b">f(x)·g(x) — pointwise product</text>
+    <line x1="50" y1="60" x2="550" y2="60" stroke="#e2e8f0" stroke-width="1"/>
+    <path id="path-prod-pos" d="" fill="#059669" fill-opacity="0.4" stroke="none"/>
+    <path id="path-prod-neg" d="" fill="#dc2626" fill-opacity="0.4" stroke="none"/>
+    <path id="path-prod" d="" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+    <line id="scan-line-2" x1="550" y1="10" x2="550" y2="110" stroke="#f59e0b" stroke-width="2"/>
+  </svg>
+
+  <!-- Cumulative integral -->
+  <svg id="svg5-int" width="600" height="120" viewBox="0 0 600 120" style="background:#fff; border:1px solid #e2e8f0; border-radius:0 0 6px 6px;">
+    <text x="10" y="20" font-size="12" fill="#64748b">Running integral ⟨f,g⟩|₀ᵗ</text>
+    <line x1="50" y1="60" x2="550" y2="60" stroke="#e2e8f0" stroke-width="1"/>
+    <path id="path-integral" d="" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+    <line id="scan-line-3" x1="550" y1="10" x2="550" y2="110" stroke="#f59e0b" stroke-width="2"/>
+    <circle id="int-endpoint" cx="550" cy="60" r="5" fill="#f59e0b"/>
+  </svg>
+
+  <div class="readout">
+    <div class="readout-row">
+      <span class="readout-label">Integration range:</span>
+      <span class="readout-value">[0, <span id="t-display">2π</span>]</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Running inner product $\langle f, g \rangle|_0^t$:</span>
+      <span class="readout-value" id="running-ip" style="color:#f59e0b; font-size:1.2rem;">0.00</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Final $\langle f, g \rangle$ (at $t = 2\pi$):</span>
+      <span class="readout-value" id="final-ip">0.00</span>
+    </div>
+    <div class="readout-row">
+      <span class="readout-label">Orthogonal?</span>
+      <span class="readout-value" id="orthog-status">—</span>
+    </div>
+  </div>
+</div>
+
+<p>Notice how $\langle \sin, \cos \rangle$ oscillates up and down but returns exactly to zero at $t = 2\pi$. The positive and negative regions perfectly cancel — that's orthogonality! This is the foundation of Fourier analysis.</p>
+
+<div class="highlight-box">
+  <strong>The power of L²:</strong> The functions $\{1, \sin(x), \cos(x), \sin(2x), \cos(2x), \ldots\}$ form an orthogonal basis for $L^2[0, 2\pi]$. Any square-integrable function can be written as a (possibly infinite) sum of these basis elements — that's the Fourier series!
+</div>
+
+<div class="question-box">
+  <strong>Check your understanding:</strong> What is $\langle \sin(x), \sin(x) \rangle = \int_0^{2\pi} \sin^2(x) \, dx$?
+  <br><br>
+  $\langle \sin, \sin \rangle = $ <input type="text" id="q5-answer" size="6"> <span id="q5-feedback" class="feedback"></span>
+  <br><small>(Hint: use the identity $\sin^2(x) = \frac{1 - \cos(2x)}{2}$)</small>
+</div>
+
+<script>
+(function() {
+  const funcF = document.getElementById('func-f');
+  const funcG = document.getElementById('func-g');
+  const intSlider = document.getElementById('int-slider');
+
+  const funcs = {
+    sin: x => Math.sin(x),
+    cos: x => Math.cos(x),
+    sin2: x => Math.sin(2*x),
+    const: x => 1
+  };
+
+  function xToCanvas(x) {
+    return 50 + (x / (2 * Math.PI)) * 500;
+  }
+
+  function integrate(f, g, tMax) {
+    // Numerical integration using trapezoidal rule
+    const n = 200;
+    const dx = tMax / n;
+    let sum = 0;
+    for (let i = 0; i < n; i++) {
+      const x0 = i * dx;
+      const x1 = (i + 1) * dx;
+      sum += (f(x0) * g(x0) + f(x1) * g(x1)) / 2 * dx;
+    }
+    return sum;
+  }
+
+  function render() {
+    const fKey = funcF.value;
+    const gKey = funcG.value;
+    const f = funcs[fKey];
+    const g = funcs[gKey];
+    const tFrac = intSlider.value / 100;
+    const tMax = tFrac * 2 * Math.PI;
+
+    // Generate paths
+    const n = 200;
+    let pathF = '', pathG = '', pathProd = '';
+    let pathProdPos = '', pathProdNeg = '';
+    let pathInt = '';
+
+    let runningInt = 0;
+    const dx = (2 * Math.PI) / n;
+
+    for (let i = 0; i <= n; i++) {
+      const x = (i / n) * 2 * Math.PI;
+      const canvasX = xToCanvas(x);
+
+      const fVal = f(x);
+      const gVal = g(x);
+      const prodVal = fVal * gVal;
+
+      // f and g paths (in first SVG, y range [-1.5, 1.5] -> [125, 25])
+      const fY = 75 - fVal * 40;
+      const gY = 75 - gVal * 40;
+      pathF += (i === 0 ? 'M' : 'L') + ` ${canvasX} ${fY}`;
+      pathG += (i === 0 ? 'M' : 'L') + ` ${canvasX} ${gY}`;
+
+      // Product path (in second SVG, y range [-1.5, 1.5] -> [110, 10])
+      const prodY = 60 - prodVal * 40;
+      pathProd += (i === 0 ? 'M' : 'L') + ` ${canvasX} ${prodY}`;
+
+      // Running integral
+      if (i > 0) {
+        runningInt += prodVal * dx;
+      }
+
+      // Integral path (scaled differently)
+      const intY = 60 - runningInt * 8; // Scale for visibility
+      pathInt += (i === 0 ? 'M' : 'L') + ` ${canvasX} ${Math.max(10, Math.min(110, intY))}`;
+    }
+
+    // Build positive and negative fill paths for product
+    pathProdPos = `M 50 60`;
+    pathProdNeg = `M 50 60`;
+    for (let i = 0; i <= n; i++) {
+      const x = (i / n) * 2 * Math.PI;
+      const canvasX = xToCanvas(x);
+      const prodVal = f(x) * g(x);
+      const prodY = 60 - prodVal * 40;
+
+      if (prodVal >= 0) {
+        pathProdPos += ` L ${canvasX} ${prodY}`;
+      } else {
+        pathProdPos += ` L ${canvasX} 60`;
+      }
+
+      if (prodVal <= 0) {
+        pathProdNeg += ` L ${canvasX} ${prodY}`;
+      } else {
+        pathProdNeg += ` L ${canvasX} 60`;
+      }
+    }
+    pathProdPos += ' L 550 60 Z';
+    pathProdNeg += ' L 550 60 Z';
+
+    // Update SVG elements
+    document.getElementById('path-f').setAttribute('d', pathF);
+    document.getElementById('path-g').setAttribute('d', pathG);
+    document.getElementById('path-prod').setAttribute('d', pathProd);
+    document.getElementById('path-prod-pos').setAttribute('d', pathProdPos);
+    document.getElementById('path-prod-neg').setAttribute('d', pathProdNeg);
+    document.getElementById('path-integral').setAttribute('d', pathInt);
+
+    // Update scan lines
+    const scanX = xToCanvas(tMax);
+    document.getElementById('scan-line-1').setAttribute('x1', scanX);
+    document.getElementById('scan-line-1').setAttribute('x2', scanX);
+    document.getElementById('scan-line-2').setAttribute('x1', scanX);
+    document.getElementById('scan-line-2').setAttribute('x2', scanX);
+    document.getElementById('scan-line-3').setAttribute('x1', scanX);
+    document.getElementById('scan-line-3').setAttribute('x2', scanX);
+
+    // Update endpoint
+    const currentInt = integrate(f, g, tMax);
+    const endpointY = 60 - currentInt * 8;
+    document.getElementById('int-endpoint').setAttribute('cx', scanX);
+    document.getElementById('int-endpoint').setAttribute('cy', Math.max(10, Math.min(110, endpointY)));
+
+    // Update displays
+    const tDisplay = tFrac < 1 ? (tFrac * 2).toFixed(2) + 'π' : '2π';
+    document.getElementById('t-value').textContent = tDisplay;
+    document.getElementById('t-display').textContent = tDisplay;
+    document.getElementById('running-ip').textContent = currentInt.toFixed(3);
+
+    const finalIP = integrate(f, g, 2 * Math.PI);
+    document.getElementById('final-ip').textContent = finalIP.toFixed(3);
+
+    const orthogStatus = document.getElementById('orthog-status');
+    if (Math.abs(finalIP) < 0.01) {
+      orthogStatus.textContent = '✓ Yes! ⟨f,g⟩ = 0';
+      orthogStatus.style.color = '#059669';
+    } else {
+      orthogStatus.textContent = '✗ No, ⟨f,g⟩ ≠ 0';
+      orthogStatus.style.color = '#dc2626';
+    }
+  }
+
+  funcF.addEventListener('change', render);
+  funcG.addEventListener('change', render);
+  intSlider.addEventListener('input', render);
+
+  // Question 5
+  document.getElementById('q5-answer').addEventListener('change', e => {
+    const val = parseFloat(e.target.value);
+    const fb = document.getElementById('q5-feedback');
+    // ∫sin²(x)dx from 0 to 2π = π
+    if (Math.abs(val - Math.PI) < 0.1 || Math.abs(val - 3.14) < 0.1) {
+      fb.textContent = '✓ Correct! ∫₀²π sin²(x)dx = π';
+      fb.className = 'feedback correct';
+    } else {
+      fb.textContent = 'Hint: ∫(1-cos(2x))/2 dx = x/2 - sin(2x)/4. Evaluate from 0 to 2π.';
+      fb.className = 'feedback incorrect';
+    }
+  });
+
+  render();
+})();
+</script>
+
+<!-- Conclusion -->
+<h2>Summary</h2>
+
+<p>You've now explored the foundational structure of Hilbert spaces:</p>
+
+<ol style="margin-left: 1.5rem; margin-top: 1rem;">
+  <li><strong>Inner products induce norms induce metrics</strong> — changing the inner product changes all of geometry.</li>
+  <li><strong>High dimensions behave strangely</strong> — distances accumulate across dimensions in ways that defy 3D intuition.</li>
+  <li><strong>Completeness is essential</strong> — Cauchy sequences must converge within the space, or analysis breaks down.</li>
+  <li><strong>The parallelogram law distinguishes Hilbert from Banach</strong> — only norms from inner products satisfy it.</li>
+  <li><strong>L² is the canonical example</strong> — functions become points, inner products become integrals, and Fourier analysis emerges naturally.</li>
+</ol>
+
+<p style="margin-top: 2rem; color: #64748b; font-style: italic;">These concepts form the foundation for quantum mechanics, signal processing, PDEs, and much of modern analysis. The geometry of infinite dimensions is strange but learnable — and now you've taken the first steps.</p>
+
+</body>
+</html>
